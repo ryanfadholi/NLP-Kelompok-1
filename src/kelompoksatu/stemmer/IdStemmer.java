@@ -63,13 +63,13 @@ public class IdStemmer {
                 (w) -> w.startsWith("per") && isVowel(w.charAt(3)),
                 (w) -> {
                 ArrayList<String> possibleBaseWords = new ArrayList<>();
-                String initialStem = w.replace("per","");
+                String initialStem = w.replaceFirst("per","");
                 
                 possibleBaseWords.add(initialStem);
                 possibleBaseWords.add("r" + initialStem);
                 
                 return BaseWordsManager.getFirstMatch(possibleBaseWords,
-                        "r" + initialStem);
+                        w);
                 }),
         //rule 23, 24, 28, 30, 31
         //........................
@@ -82,7 +82,7 @@ public class IdStemmer {
                      return "ajar";
                  }
                     
-                return w.replace("pel","l");
+                return w.replaceFirst("pe","");
                 })
     };
     
@@ -176,6 +176,10 @@ public class IdStemmer {
         
         System.out.println("Iterated " + ruleCount + " times.");
         
-        return processedQuery;
+        if(BaseWordsManager.isBaseWord(processedQuery)){
+            return processedQuery;
+        }
+        
+        return originalQuery;
     }
 }
