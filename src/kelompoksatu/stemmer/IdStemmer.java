@@ -60,13 +60,13 @@ public class IdStemmer {
     private final static Rule[] RULES = {
         //rule 21
         new Rule("21", 
-                (w) -> w.startsWith("per") && isVowel(w.charAt(3)),
+                (w) -> w.startsWith("per") && isVowel(w, 3),
                 (w) -> {
                 ArrayList<String> possibleBaseWords = new ArrayList<>();
                 String initialStem = w.replaceFirst("per","");
                 
-                possibleBaseWords.add(initialStem);
                 possibleBaseWords.add("r" + initialStem);
+                possibleBaseWords.add(initialStem);
                 
                 return BaseWordsManager.getFirstMatch(possibleBaseWords,
                         w);
@@ -75,7 +75,7 @@ public class IdStemmer {
         //........................
         //rule 32
         new Rule("32", 
-                (w) -> w.startsWith("pel") && isVowel(w.charAt(3)),
+                (w) -> w.startsWith("pel") && isVowel(w, 3),
                 (w) -> {
                 
                  if(w.equals("pelajar")){
@@ -91,9 +91,27 @@ public class IdStemmer {
         return consonantStream.anyMatch((s) -> s == c);
     }
     
+     private static boolean isConsonant(String word, int pos){
+        //Apabila posisi diluar panjang string, return false
+        if(word.length() < pos+1){
+            return false;
+        }
+        
+        return isConsonant(word.charAt(pos));
+    }
+    
     private static boolean isVowel(char c){
         Stream<Character> vowelStream = IntStream.range(0, VOWELS.length).mapToObj(i -> VOWELS[i]);
         return vowelStream.anyMatch((s) -> s == c);
+    }
+    
+    private static boolean isVowel(String word, int pos){
+        //Apabila posisi diluar panjang string, return false
+        if(word.length() < pos+1){
+            return false;
+        }
+        
+        return isVowel(word.charAt(pos));
     }
     private static String preprocess(String word){
         return word.trim().toLowerCase();
