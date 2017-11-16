@@ -59,6 +59,30 @@ public class IdStemmer {
     
     private final static Rule[] RULES = {
         //rule 21
+            new Rule("21", 
+            new RuleMatcher() {
+                @Override
+                public boolean match(String word) 
+                {//peraturan
+                    if(word.startsWith("per")){
+                        if(isVowel(word.charAt(3))){
+                            return true;
+                        }
+                    }
+                    return false;
+                }},
+            new RuleStemmer() {
+                @Override
+                public String process(String word) {
+                    ArrayList<String> possibleBaseWords = new ArrayList<>();
+                    String initialStem = word.replaceFirst("per","");
+          
+                    possibleBaseWords.add(initialStem);
+                    possibleBaseWords.add("r" + initialStem);
+                
+                    return BaseWordsManager.getFirstMatch(possibleBaseWords, word);
+                }
+            }),
         new Rule("21", 
                 (w) -> w.startsWith("per") && isVowel(w.charAt(3)),
                 (w) -> {
@@ -67,6 +91,19 @@ public class IdStemmer {
                 
                 possibleBaseWords.add(initialStem);
                 possibleBaseWords.add("r" + initialStem);
+                
+                return BaseWordsManager.getFirstMatch(possibleBaseWords,
+                        w);
+                }),
+        
+        new Rule("28", 
+                (w) -> w.startsWith("pen") && isVowel(w.charAt(3)),
+                (w) -> {
+                ArrayList<String> possibleBaseWords = new ArrayList<>();
+                String initialStem = w.replaceFirst("pen","");
+                
+                possibleBaseWords.add("n" + initialStem);
+                possibleBaseWords.add("t" + initialStem);
                 
                 return BaseWordsManager.getFirstMatch(possibleBaseWords,
                         w);
