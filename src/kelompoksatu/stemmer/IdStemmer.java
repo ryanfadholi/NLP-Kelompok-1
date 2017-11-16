@@ -109,7 +109,7 @@ public class IdStemmer {
                 })
     };
     
- private static boolean isConsonant(char c){
+    private static boolean isConsonant(char c){
         Stream<Character> consonantStream = IntStream.range(0, CONSONANTS.length).mapToObj(i -> CONSONANTS[i]);
         return consonantStream.anyMatch((s) -> s == c);
     }
@@ -213,7 +213,6 @@ public class IdStemmer {
         processedQuery = applyStep2(processedQuery);
         //C4 apakah kata sudah berbentuk kata dasar 
         System.out.println("Langkah 2: " + processedQuery);
-        
         if(BaseWordsManager.isBaseWord(processedQuery)){
             return processedQuery;
         }
@@ -269,6 +268,10 @@ public class IdStemmer {
     private static String applyStep3(String word){
         String result;
         
+        if(BaseWordsManager.isBaseWord(word)){
+            return word;
+        }
+        
         if(word.endsWith("i")){
             result = cutSuffix(word,"i");
             
@@ -279,6 +282,7 @@ public class IdStemmer {
         
         if(word.endsWith("an")){
             result = cutSuffix(word,"an");
+                
             if(BaseWordsManager.isBaseWord(applyStep4(result))){
                 return result;
             }
@@ -304,6 +308,10 @@ public class IdStemmer {
         String previousRule = "";
         String currentRule;
         
+        if(BaseWordsManager.isBaseWord(word)){
+            return word;
+        }
+        
         while(ruleCount < 3){
             currentRule = previousRule;
             
@@ -315,7 +323,7 @@ public class IdStemmer {
             for(Rule rule : RULES){
                 if(rule.match(result)){
                     currentRule = rule.definition();
-                    System.out.println(rule.definition() + "applied.");
+                    System.out.println(rule.definition() + " applied.");
                     temp = rule.apply(result);
                     if(BaseWordsManager.isBaseWord(temp)){
                         break;
