@@ -110,6 +110,7 @@ public class IdStemmer {
                 }),
         //rule 23, 24
         //........................
+        //rule 30
         new Rule("30", 
                 (w) -> w.startsWith("peng") && isVowel(w.charAt(4)),
                 (w) -> {
