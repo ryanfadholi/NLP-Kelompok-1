@@ -108,8 +108,24 @@ public class IdStemmer {
                 return BaseWordsManager.getFirstMatch(possibleBaseWords,
                         w);
                 }),
-        //rule 23, 24, 28, 30, 31
+        //rule 23, 24
         //........................
+        new Rule("30", 
+                (w) -> w.startsWith("peng") && isVowel(w.charAt(4)),
+                (w) -> {
+                ArrayList<String> possibleBaseWords = new ArrayList<>();
+                String initialStem = w.replaceFirst("peng","");
+                
+                possibleBaseWords.add(initialStem);
+                possibleBaseWords.add("k" + initialStem);
+                
+                return BaseWordsManager.getFirstMatch(possibleBaseWords,
+                        w);
+                }),
+        //rule 31
+        new Rule("31", 
+                (w) -> w.startsWith("peny") && isVowel(w, 4),
+                (w) -> w.replaceFirst("peny","s")),
         //rule 32
         new Rule("32", 
                 (w) -> w.startsWith("pel") && isVowel(w, 3),
@@ -199,8 +215,11 @@ public class IdStemmer {
             for(Rule rule : RULES){
                 if(rule.match(processedQuery)){
                     currentRule = rule.definition();
+                    System.out.println(rule.definition() + "applied.");
                     tempQuery = rule.apply(processedQuery);
-                    break;
+                    if(BaseWordsManager.isBaseWord(tempQuery)){
+                        break;
+                    }
                 }
             }
 
