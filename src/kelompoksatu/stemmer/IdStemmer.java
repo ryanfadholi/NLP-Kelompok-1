@@ -84,8 +84,11 @@ public class IdStemmer {
                 String initialStem = w.replaceFirst("peng","");
 
                 if(initialStem.startsWith("e")){
-                    initialStem = initialStem.replaceFirst("e","");
+                    if(BaseWordsManager.isBaseWord(initialStem.replaceFirst("e",""))){
+                        return initialStem.replaceFirst("e","");
+                    }
                 }
+                
                 possibleBaseWords.add(initialStem);
                 possibleBaseWords.add("k" + initialStem);
                 
